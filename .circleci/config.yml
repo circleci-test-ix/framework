@@ -11,6 +11,7 @@ jobs:
       - checkout
       - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev
       - run: sudo docker-php-ext-install zip
+      - run: sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath
       # - run: sudo apt install -y libsqlite3-dev zlib1g-dev
       # - run: sudo docker-php-ext-install zip
       # - run: sudo phpenv config-rm xdebug.ini || true
@@ -20,8 +21,8 @@ jobs:
             - composer-v1-{{ checksum "composer.lock" }}
             # fallback to using the latest cache if no exact match is found (See https://circleci.com/docs/2.0/caching/)
             - composer-v1-
-      # - run: composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
-      - run: composer install -n --prefer-dist
+      - run: composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
+      # - run: composer install -n --prefer-dist
       - save_cache:
           key: composer-v1-{{ checksum "composer.lock" }}
           paths:
