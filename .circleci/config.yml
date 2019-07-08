@@ -17,6 +17,7 @@ jobs:
       - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev
       - run: sudo docker-php-ext-install zip
       - run: sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath      
+      - run: sudo docker-php-ext-install pdo_mysql
       # - run: sudo phpenv config-rm xdebug.ini || true
       - run: sudo composer self-update
       - restore_cache:
@@ -39,8 +40,5 @@ jobs:
             sleep 1
             done
             echo Failed waiting for MySQL && exit 1
-      - run:
-          name: Installing MySql Client
-          command: sudo apt install mysql-client
       - run: vendor/bin/phpunit -d memory_limit=512M
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples   
