@@ -9,7 +9,7 @@ jobs:
         environment:          
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: forge
-          MYSQL_ROOT_HOST: localhost
+          MYSQL_ROOT_HOST: 127.0.0.1
     environment:
       - SETUP: stable
     working_directory: ~/laravel
