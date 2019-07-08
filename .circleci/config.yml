@@ -6,6 +6,7 @@ jobs:
       - image: circleci/php:7.3-stretch-node-browsers
       - image: circleci/mysql:5.7-ram
         environment:
+          MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: forge
     environment:
       - SETUP: stable
@@ -26,8 +27,6 @@ jobs:
             - ~/.composer/cache
       # - run: touch storage/testing.sqlite 
       # - run: php artisan migrate --env=testing --database=sqlite_testing --force
-      # - run: ./vendor/bin/codecept build
-      # - run: ./vendor/bin/codecept run
       - run:
           # Our primary container isn't MYSQL so run a sleep command until it's ready.
           name: Waiting for MySQL to be ready
