@@ -4,9 +4,9 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.3-stretch-node-browsers
-      - image: circleci/mysql:5.7-ram
-        environment:
-          MYSQL_ROOT_HOST: '%'
+      - image: circleci/mysql:latest-ram
+        command: [--default-authentication-plugin=mysql_native_password]
+        environment:          
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: forge
     environment:
@@ -39,5 +39,8 @@ jobs:
             sleep 1
             done
             echo Failed waiting for MySQL && exit 1
+      - run:
+          name: Installing MySql Client
+          command: sudo apt install mysql-client
       - run: vendor/bin/phpunit -d memory_limit=512M
       # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples   
