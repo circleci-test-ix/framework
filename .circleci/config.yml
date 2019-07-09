@@ -19,10 +19,10 @@ jobs:
       - run: sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath      
       - run: sudo docker-php-ext-install pdo_mysql
       # - run: sudo phpenv config-rm xdebug.ini || true      
-      - run: printf "\n" | pecl install -f memcached-2.1.0
-      - run: echo "extension = memcached.so" >> /opt/circleci/php/$(phpenv global)/etc/php.ini
+      - run: printf "\n" | sudo pecl install -f memcached-2.1.0
+#       - run: echo "extension = memcached.so" >> /opt/circleci/php/$(phpenv global)/etc/php.ini
 #       - run: echo -e "[Date]\ndate.timezone = UTC" | sudo tee /usr/local/etc/php/php.ini > /dev/null
-#       - run: echo "extension = memcached.so" | sudo tee /usr/local/etc/php/php.ini > /dev/null
+      - run: echo "extension = memcached.so" | sudo tee /usr/local/etc/php/php.ini > /dev/null
       - run: sudo composer self-update
       - restore_cache:
           key: composer
