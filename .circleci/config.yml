@@ -8,7 +8,7 @@ jobs:
         environment:          
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: forge
-      - image: memcached
+      - image: memcached:latest
     environment:
       - SETUP: stable
     working_directory: ~/laravel
@@ -19,6 +19,7 @@ jobs:
       - run: sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath      
       - run: sudo docker-php-ext-install pdo_mysql
       # - run: sudo phpenv config-rm xdebug.ini || true
+      - run: echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
       - run: sudo composer self-update
       - restore_cache:
           key: composer
