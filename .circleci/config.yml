@@ -39,9 +39,9 @@ jobs:
       - run:
           command: |
             sudo apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
-	          sudo docker-php-ext-install -j$(nproc) iconv
-	          sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-	          sudo docker-php-ext-install -j$(nproc) gd
+	    sudo docker-php-ext-install -j$(nproc) iconv
+	    sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+	    sudo docker-php-ext-install -j$(nproc) gd
 #       - run: echo "extension = memcached.so" >> /opt/circleci/php/$(phpenv global)/etc/php.ini
 #       - run: echo -e "[Date]\ndate.timezone = UTC" | sudo tee /usr/local/etc/php/php.ini > /dev/null
 #       - run: echo "extension = memcached.so" | sudo tee -a /usr/local/etc/php/php.ini > /dev/null
