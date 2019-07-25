@@ -32,13 +32,15 @@ jobs:
       - run: sudo docker-php-ext-install redis-4.3.0
       - run: sudo docker-php-ext-install pcntl
       # - run: sudo phpenv config-rm xdebug.ini || true      
-#       - run: printf "\n" | sudo pecl install -f memcached-3.1.3
-#       - run: printf "\n" | sudo pecl install -f redis-4.3.0
+      - run: printf "\n" | sudo pecl install -f memcached-3.1.3
+      - run: printf "\n" | sudo pecl install -f redis-4.3.0
+      - run: sudo docker-php-ext-enable memcached
+      - run: sudo docker-php-ext-enable redis
 #       - run: echo "extension = memcached.so" >> /opt/circleci/php/$(phpenv global)/etc/php.ini
 #       - run: echo -e "[Date]\ndate.timezone = UTC" | sudo tee /usr/local/etc/php/php.ini > /dev/null
-      - run: echo "extension = memcached.so" | sudo tee -a /usr/local/etc/php/php.ini > /dev/null
-      - run: echo "extension = redis.so" | sudo tee -a /usr/local/etc/php/php.ini > /dev/null
-      - run: echo "extension = pcntl.so" | sudo tee -a /usr/local/etc/php/php.ini > /dev/null
+#       - run: echo "extension = memcached.so" | sudo tee -a /usr/local/etc/php/php.ini > /dev/null
+#       - run: echo "extension = redis.so" | sudo tee -a /usr/local/etc/php/php.ini > /dev/null
+#       - run: echo "extension = pcntl.so" | sudo tee -a /usr/local/etc/php/php.ini > /dev/null
       - run: sudo composer self-update
 #       - mysql -e 'CREATE DATABASE forge;'
       - restore_cache:
