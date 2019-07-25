@@ -79,7 +79,7 @@ jobs:
     working_directory: ~/laravel
     steps:
       - checkout
-      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev libmemcached-dev
+      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev libmemcached-dev memcached
       - run: sudo docker-php-ext-install zip
       - run: sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath      
       - run: sudo docker-php-ext-install pdo_mysql
