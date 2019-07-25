@@ -44,7 +44,8 @@ jobs:
       - run: printf "\n" | sudo pecl install -f bcmath
 #       - run: echo "extension = memcached.so" >> /opt/circleci/php/$(phpenv global)/etc/php.ini
 #       - run: echo -e "[Date]\ndate.timezone = UTC" | sudo tee /usr/local/etc/php/php.ini > /dev/null
-      - run: echo "extension = memcached.so" | sudo tee /etc/php/7.3/cli/php.ini > /dev/null
+      - run: echo "extension = memcached.so" | sudo tee -a /etc/php/7.3/cli/php.ini > /dev/null
+      - run: echo "extension = zip.so" | sudo tee -a /etc/php/7.3/cli/php.ini > /dev/null
       #/etc/php/$PHP/cli/conf.d/travis.ini
       - run: sudo composer self-update
 #       - restore_cache:
