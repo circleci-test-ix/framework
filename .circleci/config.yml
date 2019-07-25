@@ -45,8 +45,8 @@ jobs:
       - run: echo "extension = memcached.so" | sudo tee /etc/php/7.3/cli/php.ini > /dev/null
       #/etc/php/$PHP/cli/conf.d/travis.ini
       - run: sudo composer self-update
-      - restore_cache:
-          key: composer
+#       - restore_cache:
+#           key: composer
       - run: composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
       - run: vendor/bin/phpunit -d memory_limit=512M
 
