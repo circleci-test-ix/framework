@@ -47,7 +47,7 @@ jobs:
       - run: sudo composer self-update
 #       - restore_cache:
 #           key: composer
-      - run: composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
+      - run: sudo composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
       - run: vendor/bin/phpunit -d memory_limit=512M
 
   build:
