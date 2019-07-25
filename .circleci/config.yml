@@ -1,14 +1,56 @@
 version: 2.1
 
-jobs:
+# Define templates to be reused across multiple jobs
+run_script: &run_script
+  steps:
+    - checkout
+    - run:
+        name: Install Dependencies
+        command: |
+          sudo apt update 
+          sudo apt install zlib1g-dev libsqlite3-dev libmemcached-dev memcached
+          sudo docker-php-ext-install zip
+          sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath      
+          sudo docker-php-ext-install pdo_mysql
+          sudo docker-php-ext-install pcntl
+          
+          # sudo phpenv config-rm xdebug.ini || true      
+          
+          #Install and enable memcached extension
+          printf "\n" | sudo pecl install -f memcached-3.1.3          
+          sudo docker-php-ext-enable memcached
+          
+          # Install and enable redis extension
+          printf "\n" | sudo pecl install -f redis-4.3.0         
+          sudo docker-php-ext-enable redis
+      
+          # Install and enable iconv and gd exensions
+          sudo apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+          sudo docker-php-ext-install -j$(nproc) iconv
+          sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+          sudo docker-php-ext-install -j$(nproc) gd
+          
+          sudo composer self-update
+    - restore_cache:
+        key: composer-${PHP_VERSION}
+    - run:
+        name: Composer Update
+        command: composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
+    - save_cache:
+        key: composer-${PHP_VERSION}
+        paths:
+          - ~/.composer/cache
+    - run: vendor/bin/phpunit -d memory_limit=512M          
 
-  build:
+jobs:
+  php_7_3:
+    environment:
+      PHP_VERSION: 7.3
+      SETUP: stable
     docker:
-      - image: circleci/php:7.3-stretch-node-browsers
+      - image: circleci/php:7.3-stretch
         environment:
           SETUP: stable
-#           REDIS_HOST: redis
-#           REDIS_PORT: 6379
       - image: circleci/mysql:5.7
 #         command: [--default-authentication-plugin=mysql_native_password]
         environment:          
@@ -16,60 +58,11 @@ jobs:
 #           MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
           MYSQL_DATABASE: forge
       - image: memcached
-#       - image: circleci/redis:4
-    environment:
-      SETUP: stable
-#       REDIS_HOST: redis
-#       REDIS_PORT: 6379
-    working_directory: ~/laravel
-    steps:
-      - checkout
-      - run: sudo apt update && sudo apt install zlib1g-dev libsqlite3-dev libmemcached-dev memcached
-      - run: sudo docker-php-ext-install zip
-      - run: sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath      
-      - run: sudo docker-php-ext-install pdo_mysql
-#       - run: sudo docker-php-ext-install memcached-3.1.3
-#       - run: sudo docker-php-ext-install redis-4.3.0
-      - run: sudo docker-php-ext-install pcntl
-      # - run: sudo phpenv config-rm xdebug.ini || true      
-      - run: printf "\n" | sudo pecl install -f memcached-3.1.3
-      - run: printf "\n" | sudo pecl install -f redis-4.3.0
-      - run: sudo docker-php-ext-enable memcached
-      - run: sudo docker-php-ext-enable redis
-      - run:
-          command: |
-            sudo apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
-            sudo docker-php-ext-install -j$(nproc) iconv
-            sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-            sudo docker-php-ext-install -j$(nproc) gd
-      - run: sudo composer self-update
-      - restore_cache:
-          key: composer
-      - run: composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
-      - save_cache:
-          key: composer
-          paths:
-            - ~/.composer/cache
-      # - run: touch storage/testing.sqlite 
-      # - run: php artisan migrate --env=testing --database=sqlite_testing --force
-#       - run: sudo service memcached status || true
-#       - run: sudo service memcached start
-#       - run:
-#           # Our primary container isn't MYSQL so run a sleep command until it's ready.
-#           name: Waiting for MySQL to be ready
-#           command: |
-#             for i in `seq 1 10`;
-#             do
-#             nc -z 127.0.0.1 3306 && echo Success && exit 0
-#             echo -n .
-#             sleep 1
-#             done
-#             echo Failed waiting for MySQL && exit 1
-      - run: vendor/bin/phpunit -d memory_limit=512M
-      # See https://circleci.com/docs/2.0/deployment-integrations/ for deploy examples   
+      - image: circleci/redis:4    
+    steps: *run_script
 
 workflows:
   version: 2
   build:
     jobs:
-      - build
+      - php_7_3
