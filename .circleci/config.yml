@@ -70,7 +70,7 @@ jobs:
 #           MYSQL_ROOT_PASSWORD: ""
 #           MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
           MYSQL_DATABASE: forge
-#       - image: memcached:1.5-alpine
+      - image: memcached
       - image: circleci/redis:4
     environment:
       SETUP: stable
@@ -100,7 +100,7 @@ jobs:
       # - run: touch storage/testing.sqlite 
       # - run: php artisan migrate --env=testing --database=sqlite_testing --force
       - run: sudo service memcached status || true
-      - run: sudo service memcached start
+#       - run: sudo service memcached start
       - run:
           # Our primary container isn't MYSQL so run a sleep command until it's ready.
           name: Waiting for MySQL to be ready
