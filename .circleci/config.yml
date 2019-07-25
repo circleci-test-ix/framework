@@ -15,7 +15,7 @@ jobs:
 #           MYSQL_ALLOW_EMPTY_PASSWORD: true
           #MYSQL_DATABASE: forge
 #       - image: memcached:1.5-alpine
-      - image: circleci/redis:4.3
+      - image: circleci/redis:4
     environment:
       SETUP: stable
 #       REDIS_HOST: redis
