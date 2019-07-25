@@ -20,7 +20,7 @@ jobs:
             sudo add-apt-repository -y ppa:ondrej/php
             sudo apt-get update
             sudo apt-get install -y php${PHP_VERSION} 
-            sudo apt-get install -y php${PHP_VERSION}-dev php${PHP_VERSION}-cli php${PHP_VERSION}-common php${PHP_VERSION}-intl php${PHP_VERSION}-json php${PHP_VERSION}-opcache php${PHP_VERSION}-mysql php${PHP_VERSION}-mbstring php${PHP_VERSION}-zip php${PHP_VERSION}-fpm
+            sudo apt-get install -y php${PHP_VERSION}-dev php${PHP_VERSION}-cli php${PHP_VERSION}-common php${PHP_VERSION}-bcmath php${PHP_VERSION}-intl php${PHP_VERSION}-json php${PHP_VERSION}-opcache php${PHP_VERSION}-mysql php${PHP_VERSION}-mbstring php${PHP_VERSION}-zip php${PHP_VERSION}-fpm
             if [[ PHP_VERSION = 7.1 ]]; then
               sudo apt-get install -y php${PHP_VERSION}-mcrypt
             fi        
@@ -50,7 +50,7 @@ jobs:
       - run: sudo composer self-update
 #       - restore_cache:
 #           key: composer
-      - run: sudo composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
+      - run: composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
       - run: vendor/bin/phpunit -d memory_limit=512M
 
   build:
