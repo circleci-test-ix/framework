@@ -4,6 +4,10 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.3-stretch-node-browsers
+        environment:
+          SETUP: stable
+          REDIS_HOST: redis
+          REDIS_PORT: 6379
       - image: circleci/mysql:5.7
 #         command: [--default-authentication-plugin=mysql_native_password]
 #         environment:          
@@ -12,7 +16,9 @@ jobs:
           #MYSQL_DATABASE: forge
 #       - image: memcached:1.5-alpine
     environment:
-      - SETUP: stable
+      SETUP: stable
+#       REDIS_HOST: redis
+#       REDIS_PORT: 6379
     working_directory: ~/laravel
     steps:
       - checkout
