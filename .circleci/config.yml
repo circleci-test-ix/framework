@@ -59,7 +59,7 @@ jobs:
           MYSQL_DATABASE: forge
       - image: memcached
       - image: circleci/redis:4    
-    steps: *run_script
+    <<: *run_script
 
 workflows:
   version: 2
