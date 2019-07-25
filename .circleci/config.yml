@@ -4,10 +4,11 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.3-stretch-node-browsers
-      - image: circleci/mysql:5.7-ram
+      - image: circleci/mysql:5.7
         environment:          
-          MYSQL_ROOT_PASSWORD: rootpw
-          MYSQL_DATABASE: forge
+#           MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          #MYSQL_DATABASE: forge
 #       - image: memcached:1.5-alpine
     environment:
       - SETUP: stable
