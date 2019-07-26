@@ -29,14 +29,14 @@ run_script: &run_script
           
           sudo composer self-update
     - restore_cache:
-        key: "composer-${PHP_VERSION}"
+        key: composer-{{ .Environment.PHP_VERSION }}
     - run:
         name: Composer Update
         command: |
           if [[ $SETUP = 'stable' ]]; then composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
           if [[ $SETUP = 'lowest' ]]; then composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
     - save_cache:
-        key: "composer-${PHP_VERSION}"
+        key: composer-{{ .Environment.PHP_VERSION }}
         paths:
           - ~/.composer/cache
     - run: vendor/bin/phpunit -d memory_limit=512M          
@@ -53,8 +53,7 @@ jobs:
       - image: circleci/mysql:5.7
         environment:
           MYSQL_DATABASE: forge
-    <<: *run_script:
-      - run: echo "** HAHAHHA **"
+    <<: *run_script
     
   php_7_1_lowest:
     environment:
