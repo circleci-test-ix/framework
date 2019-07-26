@@ -43,7 +43,6 @@ run_script: &run_script
         key: deps-{{ .Environment.CIRCLE_JOB }}
         paths:
           - ~/.composer/cache
-          - /usr/src/php/ext
     - run: vendor/bin/phpunit -d memory_limit=512M          
 
 jobs:
