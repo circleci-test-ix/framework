@@ -8,11 +8,19 @@ run_script: &run_script
         name: Install Dependencies
         command: |
           sudo apt update 
-          sudo apt install zlib1g-dev libsqlite3-dev libmemcached-dev memcached
+          sudo apt install zlib1g-dev libsqlite3-dev libmemcached-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+          #memcached
+          
+          $ Install PHP Extensions
           sudo docker-php-ext-install zip
           sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath      
           sudo docker-php-ext-install pdo_mysql
           #sudo docker-php-ext-install pcntl
+          # Install and enable iconv and gd exensions
+          sudo apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+          sudo docker-php-ext-install -j$(nproc) iconv
+          sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+          sudo docker-php-ext-install -j$(nproc) gd
           
           # sudo phpenv config-rm xdebug.ini || true      
           
@@ -23,12 +31,6 @@ run_script: &run_script
           # Install and enable redis extension
           printf "\n" | sudo pecl install -f redis-4.3.0         
           sudo docker-php-ext-enable redis
-      
-          # Install and enable iconv and gd exensions
-          sudo apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
-          sudo docker-php-ext-install -j$(nproc) iconv
-          sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-          sudo docker-php-ext-install -j$(nproc) gd
           
           sudo composer self-update
     - restore_cache:
