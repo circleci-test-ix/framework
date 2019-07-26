@@ -4,44 +4,39 @@ version: 2.1
 run_script: &run_script
   steps:
     - checkout
+    - restore_cache:
+        key: composer-{{ .Environment.CIRCLE_JOB }}
     - run:
         name: Install APT Dependencies
         command: |
           echo " ** SETUP: ${SETUP} **"
           echo " ** PHP_VERSION: ${PHP_VERSION} **"
           sudo apt update
-          sudo apt install libmemcached-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev
-          
+          sudo apt install libmemcached-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev              
     - run:
         name: Install PHP Extensions
         command: |          
           # Install PHP Extensions
           sudo docker-php-ext-install bcmath
-          #sudo docker-php-ext-install pdo_mysql
+          sudo docker-php-ext-install pdo_mysql
           sudo docker-php-ext-install pcntl
           sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
-          sudo docker-php-ext-install -j$(nproc) gd
-          
+          sudo docker-php-ext-install -j$(nproc) gd          
     - run:
         name: Install Memcached PHP Extension
         command: |
           # Install and enable memcached extension
           printf "\n" | sudo pecl install -f memcached-3.1.3          
-          sudo docker-php-ext-enable memcached
-          
+          sudo docker-php-ext-enable memcached          
     - run:
         name: Install Redis PHP Extension
         command: |          
           # Install and enable redis extension
           printf "\n" | sudo pecl install -f redis-4.3.0         
-          sudo docker-php-ext-enable redis
-          
+          sudo docker-php-ext-enable redis          
     - run:
         name: Composer Update
-        command: sudo composer self-update
-        
-    - restore_cache:
-        key: composer-{{ .Environment.CIRCLE_JOB }}
+        command: sudo composer self-update            
     - run:
         name: Composer Update
         command: |
@@ -51,6 +46,7 @@ run_script: &run_script
         key: composer-{{ .Environment.CIRCLE_JOB }}
         paths:
           - ~/.composer/cache
+          - /usr/src/php/ext
     - run: vendor/bin/phpunit -d memory_limit=512M          
 
 jobs:
