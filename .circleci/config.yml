@@ -5,7 +5,7 @@ run_script: &run_script
   steps:
     - checkout
     - restore_cache:
-        key: composer-{{ .Environment.CIRCLE_JOB }}
+        key: deps-{{ .Environment.CIRCLE_JOB }}
     - run:
         name: Install APT Dependencies
         command: |
@@ -43,7 +43,7 @@ run_script: &run_script
           if [[ $SETUP = 'stable' ]]; then composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
           if [[ $SETUP = 'lowest' ]]; then composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
     - save_cache:
-        key: composer-{{ .Environment.CIRCLE_JOB }}
+        key: deps-{{ .Environment.CIRCLE_JOB }}
         paths:
           - ~/.composer/cache
           - /usr/src/php/ext
