@@ -53,7 +53,7 @@ jobs:
       - image: circleci/mysql:5.7
         environment:
           MYSQL_DATABASE: forge
-    <<: *run_script
+    <<: *run_script:
       - run: echo "** HAHAHHA **"
     
   php_7_1_lowest:
