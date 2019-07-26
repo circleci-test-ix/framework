@@ -29,14 +29,14 @@ run_script: &run_script
           
           sudo composer self-update
     - restore_cache:
-        key: composer-{{ .Environment.PHP_VERSION }}
+        key: composer-{{ .Environment.CIRCLE_JOB }}
     - run:
         name: Composer Update
         command: |
           if [[ $SETUP = 'stable' ]]; then composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
           if [[ $SETUP = 'lowest' ]]; then composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
     - save_cache:
-        key: composer-{{ .Environment.PHP_VERSION }}
+        key: composer-{{ .Environment.CIRCLE_JOB }}
         paths:
           - ~/.composer/cache
     - run: vendor/bin/phpunit -d memory_limit=512M          
