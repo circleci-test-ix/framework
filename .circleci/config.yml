@@ -16,7 +16,7 @@ run_script: &run_script
         name: Install PHP Extensions
         command: |          
           # Install PHP Extensions
-          #sudo docker-php-ext-install bcmath
+          sudo docker-php-ext-install bcmath
           #sudo docker-php-ext-install pdo_mysql
           sudo docker-php-ext-install pcntl
           sudo docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
