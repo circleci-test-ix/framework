@@ -15,7 +15,8 @@ run_script: &run_script
           
           # Install PHP Extensions
           sudo docker-php-ext-install zip
-          sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath      
+          sudo docker-php-ext-install bcmath 
+          #&& sudo docker-php-ext-enable bcmath      
           sudo docker-php-ext-install pdo_mysql
           sudo docker-php-ext-install pcntl
           
@@ -37,14 +38,14 @@ run_script: &run_script
           
           sudo composer self-update
     - restore_cache:
-        key: composer-${PHP_VERSION}
+        key: "composer-${PHP_VERSION}"
     - run:
         name: Composer Update
         command: |
-          if [[ $SETUP = 'stable' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
-          if [[ $SETUP = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
+          if [[ $SETUP = 'stable' ]]; then composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
+          if [[ $SETUP = 'lowest' ]]; then composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
     - save_cache:
-        key: composer-${PHP_VERSION}
+        key: "composer-${PHP_VERSION}"
         paths:
           - ~/.composer/cache
     - run: vendor/bin/phpunit -d memory_limit=512M          
