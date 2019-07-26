@@ -7,6 +7,8 @@ run_script: &run_script
     - run:
         name: Install Dependencies
         command: |
+          echo " ** SETUP: ${SETUP} **"
+          echo " ** PHP_VERSION: ${PHP_VERSION} **"
           sudo apt update 
           sudo apt install zlib1g-dev libsqlite3-dev libmemcached-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev
           #memcached
@@ -15,7 +17,8 @@ run_script: &run_script
           sudo docker-php-ext-install zip
           sudo docker-php-ext-install bcmath && sudo docker-php-ext-enable bcmath      
           sudo docker-php-ext-install pdo_mysql
-          #sudo docker-php-ext-install pcntl
+          sudo docker-php-ext-install pcntl
+          
           # Install and enable iconv and gd exensions
           sudo apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev
           sudo docker-php-ext-install -j$(nproc) iconv
@@ -37,7 +40,9 @@ run_script: &run_script
         key: composer-${PHP_VERSION}
     - run:
         name: Composer Update
-        command: composer update --prefer-dist --no-interaction --prefer-stable --no-suggest
+        command: |
+          if [[ $SETUP = 'stable' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
+          if [[ $SETUP = 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
     - save_cache:
         key: composer-${PHP_VERSION}
         paths:
@@ -45,26 +50,91 @@ run_script: &run_script
     - run: vendor/bin/phpunit -d memory_limit=512M          
 
 jobs:
-  php_7_3:
+  php_7_1_stable:
+    environment:
+      PHP_VERSION: 7.1
+      SETUP: stable
+    docker:
+      - image: circleci/php:7.1-stretch      
+      - image: memcached
+      - image: circleci/redis:4
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DATABASE: forge
+    <<: *run_script
+    
+  php_7_1_lowest:
+    environment:
+      PHP_VERSION: 7.1
+      SETUP: lowest
+    docker:
+      - image: circleci/php:7.1-stretch      
+      - image: memcached
+      - image: circleci/redis:4
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DATABASE: forge
+    <<: *run_script
+    
+  php_7_2_stable:
+    environment:
+      PHP_VERSION: 7.2
+      SETUP: stable
+    docker:
+      - image: circleci/php:7.2-stretch      
+      - image: memcached
+      - image: circleci/redis:4
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DATABASE: forge
+    <<: *run_script
+    
+  php_7_2_lowest:
+    environment:
+      PHP_VERSION: 7.2
+      SETUP: lowest
+    docker:
+      - image: circleci/php:7.2-stretch      
+      - image: memcached
+      - image: circleci/redis:4
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DATABASE: forge
+    <<: *run_script
+    
+  php_7_3_stable:
     environment:
       PHP_VERSION: 7.3
       SETUP: stable
     docker:
-      - image: circleci/php:7.3-cli-stretch
-        environment:
-          SETUP: stable
-      - image: circleci/mysql:5.7
-#         command: [--default-authentication-plugin=mysql_native_password]
-        environment:          
-#           MYSQL_ROOT_PASSWORD: ""
-#           MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-          MYSQL_DATABASE: forge
+      - image: circleci/php:7.3-stretch      
       - image: memcached
-      - image: circleci/redis:4    
+      - image: circleci/redis:4
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DATABASE: forge
     <<: *run_script
+    
+  php_7_3_lowest:
+    environment:
+      PHP_VERSION: 7.3
+      SETUP: lowest
+    docker:
+      - image: circleci/php:7.3-stretch      
+      - image: memcached
+      - image: circleci/redis:4
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DATABASE: forge
+    <<: *run_script    
 
 workflows:
   version: 2
   build:
     jobs:
-      - php_7_3
+      - php_7_1_stable
+      - php_7_1_lowest
+      - php_7_2_stable
+      - php_7_2_lowest
+      - php_7_3_stable
+      - php_7_3_lowest
