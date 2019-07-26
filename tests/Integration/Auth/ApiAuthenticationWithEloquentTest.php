@@ -22,7 +22,7 @@ class ApiAuthenticationWithEloquentTest extends TestCase
 
         $app['config']->set('database.connections.testbench', [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'localhost'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'username' => 'root',
             'password' => 'invalid-credentials',
             'database' => 'forge',
@@ -38,7 +38,7 @@ class ApiAuthenticationWithEloquentTest extends TestCase
 
         $this->expectException(QueryException::class);
 
-        $this->expectExceptionMessage("SQLSTATE[HY000] [1045] Access denied for user 'root'@'localhost' (using password: YES) (SQL: select * from `users` where `api_token` = whatever limit 1)");
+        $this->expectExceptionMessage("SQLSTATE[HY000] [1045] Access denied for user 'root'@'127.0.0.1' (using password: YES) (SQL: select * from `users` where `api_token` = whatever limit 1)");
 
         try {
             $this->withoutExceptionHandling()->get('/auth', ['Authorization' => 'Bearer whatever']);
