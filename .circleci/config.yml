@@ -10,7 +10,7 @@ run_script: &run_script
           echo " ** SETUP: ${SETUP} **"
           echo " ** PHP_VERSION: ${PHP_VERSION} **"
           sudo apt update
-          sudo apt install libfreetype6-dev libjpeg62-turbo-dev libpng-dev
+          sudo apt install libmemcached-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev
           #sudo apt install libsqlite3-dev libmemcached-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev
           #zlib1g-dev
           #memcached
